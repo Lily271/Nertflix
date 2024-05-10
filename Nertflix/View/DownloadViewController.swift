@@ -1,5 +1,5 @@
 //
-//  UpComingViewController.swift
+//  DownloadViewController.swift
 //  Nertflix
 //
 //  Created by Lily Tran on 6/5/24.
@@ -7,12 +7,12 @@
 
 import UIKit
 
-class UpComingViewController: UIViewController {
+class DownloadViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .systemBackground
     }
     
 
