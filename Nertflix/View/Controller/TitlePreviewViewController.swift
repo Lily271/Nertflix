@@ -58,8 +58,17 @@ class TitlePreviewViewController: UIViewController {
             view.addSubview(downloadButton)
             
             configureConstraints()
+            setupBackButton()
             
-            
+        }
+    
+    private func setupBackButton() {
+            let backButton = UIBarButtonItem(title: "Back", style: .plain, target: self, action: #selector(backButtonTapped))
+            navigationItem.leftBarButtonItem = backButton
+        }
+        
+        @objc private func backButtonTapped() {
+            navigationController?.popViewController(animated: true)
         }
         
 
@@ -108,14 +117,5 @@ class TitlePreviewViewController: UIViewController {
             
             webView.load(URLRequest(url: url))
         }
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

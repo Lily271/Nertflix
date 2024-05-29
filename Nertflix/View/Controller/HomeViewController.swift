@@ -42,9 +42,9 @@ class HomeViewController: UIViewController {
         
         // initialize header
         headerView = HeroHeaderUIView(frame: CGRect(x: 0, y: 0, width: view.bounds.width, height: 450))
+        headerView?.delegate = self
         homeFeedTable.tableHeaderView = headerView
         configureHeaderView()
-        
         
     }
     
@@ -54,9 +54,10 @@ class HomeViewController: UIViewController {
             APICaller.shared.getTrendingMovies { [weak self] result in
                 switch result {
                 case.success(let titles):
-                    let selectedTitle = titles.randomElement()
-                    self?.randomTrendingMovie = titles.randomElement()
-                    self?.headerView?.configure(with: TitleViewModel(titleName: selectedTitle?.original_title ?? "", posterURL: selectedTitle?.poster_path ?? ""))
+                    if let selectedTitle = titles.randomElement() {
+                        self?.randomTrendingMovie = titles.randomElement()
+                        self?.headerView?.configure(with: selectedTitle)
+                    }
                 case.failure(let error):
                     print(error.localizedDescription)
                 }
@@ -74,16 +75,20 @@ class HomeViewController: UIViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(customView: barButton)
         
         navigationItem.rightBarButtonItems = [
-            UIBarButtonItem(image: UIImage(systemName: "person"), style: .done, target: self, action: nil),
+            UIBarButtonItem(image: UIImage(systemName: "escape"), style: .done, target: self, action: #selector(onLogout)),
             UIBarButtonItem(image: UIImage(systemName: "play.rectangle"), style: .done, target: self, action: nil)
         ]
         navigationController?.navigationBar.tintColor = .white
+    }
+    
+    @objc func onLogout () {
+        UserDefaults.standard.setValue(false, forKey: "IsLogin")
+        App.shared.switchRoot(type: .login)
     }
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         homeFeedTable.frame = view.bounds
-
     }
     
 
@@ -211,6 +216,16 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 
 extension HomeViewController: CollectionViewTableViewCellDelegate{
     func collectionViewTableViewCellDidTapCell(_ cell: CollectionViewTableViewCell, viewModel: TitlePreviewViewModel) {
+        DispatchQueue.main.async { [weak self] in
+            let vc = TitlePreviewViewController()
+            vc.configure(with: viewModel)
+            self?.navigationController?.pushViewController(vc, animated: true)
+        }
+    }
+}
+
+extension HomeViewController: HeroHeaderUIViewDelegate{
+    func onPlay(viewModel: TitlePreviewViewModel) {
         DispatchQueue.main.async { [weak self] in
             let vc = TitlePreviewViewController()
             vc.configure(with: viewModel)

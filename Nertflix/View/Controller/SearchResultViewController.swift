@@ -48,9 +48,6 @@ class SearchResultsViewController: UIViewController {
         searchResultsCollectionView.frame = view.bounds
     }
     
-
-    
-
 }
 
 

@@ -18,8 +18,28 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = MainTabBarViewController()
-        window?.makeKeyAndVisible()
+//        window?.rootViewController = LoginViewController()
+//
+//        window?.makeKeyAndVisible()
+        let isLogin = UserDefaults.standard.bool(forKey: "IsLogin")
+        if isLogin == true {
+//            let mainTab = MainTabBarViewController()
+//            let nav = UINavigationController.init(rootViewController: mainTab)
+//            window?.rootViewController = nav
+//            
+//            window?.makeKeyAndVisible()
+//            window?.windowScene = windowScene
+            App.shared.switchRoot(type: .main)
+        }
+        else {
+//            let login = LoginViewController()
+//            let nav = UINavigationController.init(rootViewController: login)
+//            window?.rootViewController = nav
+//            
+//            window?.makeKeyAndVisible()
+//            window?.windowScene = windowScene
+            App.shared.switchRoot(type: .login)
+        }
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

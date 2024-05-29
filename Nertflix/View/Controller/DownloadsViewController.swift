@@ -1,5 +1,5 @@
 //
-//  DownloadViewController.swift
+//  DownloadsViewController.swift
 //  Nertflix
 //
 //  Created by Lily Tran on 6/5/24.
@@ -91,7 +91,7 @@ extension DownloadsViewController: UITableViewDelegate, UITableViewDataSource {
             DataPersistenceManager.shared.deleteTitleWith(model: titles[indexPath.row]) { [weak self] result in
                 switch result {
                 case .success():
-                    print("Deleted fromt the database")
+                    print("Deleted from the database")
                 case .failure(let error):
                     print(error.localizedDescription)
                 }

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "C5441D39-B0F7-49A9-9738-0744C1FF0632"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "F62E6BA6-0600-449D-B239-070050C52330"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Nertflix/Views/TitleCollectionViewCell.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "42"
+            endingLineNumber = "42"
+            landmarkName = "configure(with:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "F62E6BA6-0600-449D-B239-070050C52330 - 3e7d0a013c3df841"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Nertflix.TitleCollectionViewCell.configure(with: Swift.String) -&gt; ()"
+                  moduleName = "Nertflix"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/huonggiangtran/Document/IOS/Nertflix/Nertflix/Views/TitleCollectionViewCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "40"
+                  endingLineNumber = "40"
+                  offsetFromSymbolStart = "524">
+               </Location>
+               <Location
+                  uuid = "F62E6BA6-0600-449D-B239-070050C52330 - 3e7d0a013c3df822"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Nertflix.TitleCollectionViewCell.configure(with: Swift.String) -&gt; ()"
+                  moduleName = "Nertflix"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/huonggiangtran/Document/IOS/Nertflix/Nertflix/Views/TitleCollectionViewCell.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "41"
+                  endingLineNumber = "41"
+                  offsetFromSymbolStart = "492">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
