@@ -9,7 +9,7 @@ import UIKit
 
 class UpComingViewController: UIViewController {
     
-    private var titles: [Title] = [Title]()
+    let upCommingViewModel = UpCommingViewModel()
     
     private let upcomingTable: UITableView = {
         
@@ -36,15 +36,16 @@ class UpComingViewController: UIViewController {
         upcomingTable.frame = view.bounds
     }
     private func fetchUpcoming() {
-        APICaller.shared.getUpcomingMovies { [weak self] result in
-            switch result {
-            case .success(let titles):
-                self?.titles = titles
+        upCommingViewModel.fetchUpcoming { [weak self] isSuccess, error in
+            if(isSuccess){
                 DispatchQueue.main.async {
                     self?.upcomingTable.reloadData()
                 }
-            case.failure(let error):
-                print(error.localizedDescription)
+            }
+            else {
+                if let error = error {
+                    print(error.localizedDescription)
+                }
             }
         }
     }
@@ -52,14 +53,14 @@ class UpComingViewController: UIViewController {
 
 extension UpComingViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return titles.count
+        return upCommingViewModel.titles.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleTableViewCell.identifier, for: indexPath) as? TitleTableViewCell else {
             return UITableViewCell()
         }
-        let title = titles[indexPath.row]
+        let title = upCommingViewModel.titles[indexPath.row]
         cell.configure(with: TitleViewModel(titleName: (title.original_title ?? title.original_name) ?? "Unknow title name", posterURL: title.poster_path ?? ""))
         return cell
     }
@@ -70,13 +71,13 @@ extension UpComingViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let title = titles[indexPath.row]
+        let title = upCommingViewModel.titles[indexPath.row]
         
         guard let titleName = title.original_title ?? title.original_name else {
             return
         }
         
-        APICaller.shared.getMovie(with: titleName) {[weak self] result in
+        upCommingViewModel.getMovie(titleName: titleName) { [weak self] result in
             switch result {
             case .success(let videoElemnt):
                 DispatchQueue.main.async {

@@ -17,10 +17,8 @@ enum Sections: Int {
 
 class HomeViewController: UIViewController {
     
-    private var randomTrendingMovie: Title?
+    let homeViewModel = HomeViewModel()
     private var headerView: HeroHeaderUIView?
-    
-    let sectionTitles: [String] = ["Trending Movies","Trending TV", "Popular", "Upcoming Movie", "Top rated"]
     
     private let homeFeedTable: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
@@ -49,19 +47,8 @@ class HomeViewController: UIViewController {
     }
     
     private func configureHeaderView() {
-        APICaller.shared.getTrendingMovies { result in
-            
-            APICaller.shared.getTrendingMovies { [weak self] result in
-                switch result {
-                case.success(let titles):
-                    if let selectedTitle = titles.randomElement() {
-                        self?.randomTrendingMovie = titles.randomElement()
-                        self?.headerView?.configure(with: selectedTitle)
-                    }
-                case.failure(let error):
-                    print(error.localizedDescription)
-                }
-            }
+        homeViewModel.configureHeaderView { [weak self] selectedTitle in
+            self?.headerView?.configure(with: selectedTitle)
         }
     }
     
@@ -82,8 +69,7 @@ class HomeViewController: UIViewController {
     }
     
     @objc func onLogout () {
-        UserDefaults.standard.setValue(false, forKey: "IsLogin")
-        App.shared.switchRoot(type: .login)
+        homeViewModel.onLogout()
     }
 
     override func viewDidLayoutSubviews() {
@@ -119,7 +105,7 @@ class HomeViewController: UIViewController {
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sectionTitles.count
+        return homeViewModel.sectionTitles.count
     }
     
     
@@ -135,7 +121,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         
         switch indexPath.section {
         case Sections.TrendingMovies.rawValue:
-            APICaller.shared.getTrendingMovies { result in
+            homeViewModel.getTrendingMovies { result in
                 switch result {
                 case.success(let titles):
                     cell.configure(with: titles)
@@ -144,7 +130,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         case Sections.TrendingTv.rawValue:
-            APICaller.shared.getTrendingTvs { result in
+            homeViewModel.getTrendingTvs { result in
                 switch result {
                 case.success(let titles):
                     cell.configure(with: titles)
@@ -153,7 +139,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         case Sections.Popular.rawValue:
-            APICaller.shared.getPopular { result in
+            homeViewModel.getPopular { result in
                 switch result {
                 case.success(let titles):
                     cell.configure(with: titles)
@@ -162,7 +148,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         case Sections.Upcoming.rawValue:
-            APICaller.shared.getUpcomingMovies { result in
+            homeViewModel.getUpcomingMovies { result in
                 switch result {
                 case.success(let titles):
                     cell.configure(with: titles)
@@ -171,7 +157,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
                 }
             }
         case Sections.TopRated.rawValue:
-            APICaller.shared.getTopRated { result in
+            homeViewModel.getTopRated { result in
                 switch result {
                 case.success(let titles):
                     cell.configure(with: titles)
@@ -210,7 +196,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sectionTitles[section]
+        return homeViewModel.sectionTitles[section]
     }
 }
 

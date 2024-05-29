@@ -13,10 +13,14 @@ protocol SearchResultsViewControllerDelegate: AnyObject {
 
 class SearchResultsViewController: UIViewController {
     
-   
-    public var titles: [Title] = [Title]()
+    let searchResultViewModel = SearchResultViewModel()
     
     public weak var delegate: SearchResultsViewControllerDelegate?
+    
+    convenience init (titles: [Title]) {
+        self.init()
+        searchResultViewModel.titles = titles
+    }
     
     public let searchResultsCollectionView: UICollectionView = {
        
@@ -53,7 +57,7 @@ class SearchResultsViewController: UIViewController {
 
 extension SearchResultsViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return titles.count
+        return searchResultViewModel.titles.count
     }
     
     
@@ -63,7 +67,7 @@ extension SearchResultsViewController: UICollectionViewDelegate, UICollectionVie
         }
         
         
-        let title = titles[indexPath.row]
+        let title = searchResultViewModel.titles[indexPath.row]
         cell.configure(with: title.poster_path ?? "")
         return cell
     }
@@ -72,9 +76,10 @@ extension SearchResultsViewController: UICollectionViewDelegate, UICollectionVie
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
         
-        let title = titles[indexPath.row]
+        let title = searchResultViewModel.titles[indexPath.row]
         let titleName = title.original_title ?? ""
-        APICaller.shared.getMovie(with: titleName) { [weak self] result in
+        
+        searchResultViewModel.getMovie(titleName: titleName) { [weak self] result in
             switch result {
             case .success(let videoElement):
                 self?.delegate?.searchResultsViewControllerDidTapItem(TitlePreviewViewModel(title: title.original_title ?? "", youtubeView: videoElement, titleOverview: title.overview ?? ""))
@@ -84,8 +89,6 @@ extension SearchResultsViewController: UICollectionViewDelegate, UICollectionVie
                 print(error.localizedDescription)
             }
         }
-        
-
     }
     
 }

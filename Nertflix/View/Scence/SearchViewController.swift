@@ -10,7 +10,7 @@ import UIKit
 class SearchViewController: UIViewController {
 
     
-    private var titles: [Title] = [Title]()
+    let searchViewModel = SearchViewModel()
 
     private let discoverTable: UITableView = {
         let table = UITableView()
@@ -46,15 +46,16 @@ class SearchViewController: UIViewController {
     
     
     private func fetchDiscoverMovies() {
-        APICaller.shared.getDiscoverMovies { [weak self] result in
-            switch result {
-            case .success(let titles):
-                self?.titles = titles
+        searchViewModel.fetchDiscoverMovies { [weak self] isSuccess, error in
+            if(isSuccess){
                 DispatchQueue.main.async {
                     self?.discoverTable.reloadData()
                 }
-            case .failure(let error):
-                print(error.localizedDescription)
+            }
+            else {
+                if let error = error {
+                    print(error.localizedDescription)
+                }
             }
         }
     }
@@ -72,7 +73,7 @@ class SearchViewController: UIViewController {
 
 extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return titles.count;
+        return searchViewModel.titles.count;
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -82,7 +83,7 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
         }
         
         
-        let title = titles[indexPath.row]
+        let title = searchViewModel.titles[indexPath.row]
         let model = TitleViewModel(titleName: title.original_name ?? title.original_title ?? "Unknown name", posterURL: title.poster_path ?? "")
         cell.configure(with: model)
         
@@ -97,14 +98,13 @@ extension SearchViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let title = titles[indexPath.row]
+        let title = searchViewModel.titles[indexPath.row]
         
         guard let titleName = title.original_title ?? title.original_name else {
             return
         }
         
-        
-        APICaller.shared.getMovie(with: titleName) { [weak self] result in
+        searchViewModel.getMovie(titleName: titleName) { [weak self] result in
             switch result {
             case .success(let videoElement):
                 DispatchQueue.main.async {
@@ -126,19 +126,17 @@ extension SearchViewController: UISearchResultsUpdating, SearchResultsViewContro
     func updateSearchResults(for searchController: UISearchController) {
         let searchBar = searchController.searchBar
         
-        guard let query = searchBar.text,
-              !query.trimmingCharacters(in: .whitespaces).isEmpty,
-              query.trimmingCharacters(in: .whitespaces).count >= 3,
-              let resultsController = searchController.searchResultsController as? SearchResultsViewController else {
+
+        guard let resultsController = searchController.searchResultsController as? SearchResultsViewController else {
                   return
               }
         resultsController.delegate = self
         
-        APICaller.shared.search(with: query) { result in
+        searchViewModel.searchMovie(searchBar: searchBar.text) { result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let titles):
-                    resultsController.titles = titles
+                    resultsController.searchResultViewModel.titles = titles
                     resultsController.searchResultsCollectionView.reloadData()
                 case .failure(let error):
                     print(error.localizedDescription)
