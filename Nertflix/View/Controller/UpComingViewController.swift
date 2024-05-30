@@ -61,7 +61,7 @@ extension UpComingViewController: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         let title = upCommingViewModel.titles[indexPath.row]
-        cell.configure(with: TitleViewModel(titleName: (title.original_title ?? title.original_name) ?? "Unknow title name", posterURL: title.poster_path ?? ""))
+        cell.configure(with: TitlePreviewModel(titleName: (title.original_title ?? title.original_name) ?? "Unknow title name", posterURL: title.poster_path ?? ""))
         return cell
     }
     
@@ -82,7 +82,7 @@ extension UpComingViewController: UITableViewDelegate, UITableViewDataSource {
             case .success(let videoElemnt):
                 DispatchQueue.main.async {
                     let vc = TitlePreviewViewController()
-                    vc.configure(with: TitlePreviewViewModel(title: titleName, youtubeView: videoElemnt, titleOverview: title.overview ?? ""))
+                    vc.configure(with: TitleModel(title: titleName, youtubeView: videoElemnt, titleOverview: title.overview ?? ""))
                     self?.navigationController?.pushViewController(vc, animated: true)
                 }
                 

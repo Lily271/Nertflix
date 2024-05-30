@@ -201,7 +201,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
 }
 
 extension HomeViewController: CollectionViewTableViewCellDelegate{
-    func collectionViewTableViewCellDidTapCell(_ cell: CollectionViewTableViewCell, viewModel: TitlePreviewViewModel) {
+    func collectionViewTableViewCellDidTapCell(_ cell: CollectionViewTableViewCell, viewModel: TitleModel) {
         DispatchQueue.main.async { [weak self] in
             let vc = TitlePreviewViewController()
             vc.configure(with: viewModel)
@@ -211,7 +211,7 @@ extension HomeViewController: CollectionViewTableViewCellDelegate{
 }
 
 extension HomeViewController: HeroHeaderUIViewDelegate{
-    func onPlay(viewModel: TitlePreviewViewModel) {
+    func onPlay(viewModel: TitleModel) {
         DispatchQueue.main.async { [weak self] in
             let vc = TitlePreviewViewController()
             vc.configure(with: viewModel)

@@ -38,7 +38,7 @@ class TitlePreviewViewController: UIViewController {
         let label = UILabel()
         label.font = .systemFont(ofSize: 18, weight: .regular)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.numberOfLines = 0
+        label.numberOfLines = 10
         label.text = "This is the best movie ever to watch as a kid!"
         return label
     }()
@@ -137,7 +137,7 @@ class TitlePreviewViewController: UIViewController {
         print("Download video")
     }
     
-    public func configure(with model: TitlePreviewViewModel) {
+    public func configure(with model: TitleModel) {
         titleLabel.text = model.title
         overviewLabel.text = model.titleOverview
         
